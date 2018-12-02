@@ -290,6 +290,7 @@ void test_rotate_l() {
 }
 
 int main() {
+  std::cout << "Start tests" << std::endl;
   test_is_solved();
   test_get_state();
   test_rotate_u();
@@ -298,5 +299,5 @@ int main() {
   test_rotate_b();
   test_rotate_r();
   test_rotate_l();
-  return 0;
+  std::cout << "Succeed all tests" << std::endl;
 }

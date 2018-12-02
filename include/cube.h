@@ -1,8 +1,6 @@
 #ifndef CUBE_H_
 #define CUBE_H_
 
-#include <vector>
-
 const int state_size = 20 * 24;
 
 enum Move {
