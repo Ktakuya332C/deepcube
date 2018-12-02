@@ -7,8 +7,15 @@ void test_is_solved() {
   assert(cube.is_solved());
 }
 
+void test_is_solved_hypo() {
+  Cube cube;
+  cube.rotate(R_CC);
+  assert(!cube.is_solved());
+  assert(cube.is_solved_hypo(R_CW));
+}
+
 void test_get_state() {
-  bool expected[state_size] = {
+  double expected[state_size] = {
     1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -34,9 +41,46 @@ void test_get_state() {
     0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
   };
-  bool target[state_size];
+  double target[state_size];
   Cube cube;
   cube.get_state(target);
+  for (int i=0; i<state_size; i++) {
+    assert(target[i] == expected[i]);
+  }
+}
+
+void test_get_state_hypo() {
+  Cube cube;
+  
+  double expected[state_size] = {
+    0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    
+    0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    
+    0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    
+    0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    
+    0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
+  };
+  double target[state_size];
+  cube.get_state_hypo(U_CW, target);
+  assert(cube.is_solved());
   for (int i=0; i<state_size; i++) {
     assert(target[i] == expected[i]);
   }
@@ -50,7 +94,7 @@ void test_rotate_u() {
   assert(cube.is_solved());
   
   cube.rotate(U_CW);
-  bool expected[state_size] = {
+  double expected[state_size] = {
     0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -76,7 +120,7 @@ void test_rotate_u() {
     0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
   };
-  bool target[state_size];
+  double target[state_size];
   cube.get_state(target);
   for (int i=0; i<state_size; i++) {
     assert(target[i] == expected[i]);
@@ -91,7 +135,7 @@ void test_rotate_d() {
   assert(cube.is_solved());
   
   cube.rotate(D_CC);
-  bool expected[state_size] = {
+  double expected[state_size] = {
     1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -117,7 +161,7 @@ void test_rotate_d() {
     0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
   };
-  bool target[state_size];
+  double target[state_size];
   cube.get_state(target);
   for (int i=0; i<state_size; i++) {
     assert(target[i] == expected[i]);
@@ -132,7 +176,7 @@ void test_rotate_f() {
   assert(cube.is_solved());
   
   cube.rotate(F_CW);
-  bool expected[state_size] = {
+  double expected[state_size] = {
     1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,
@@ -158,7 +202,7 @@ void test_rotate_f() {
     0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
   };
-  bool target[state_size];
+  double target[state_size];
   cube.get_state(target);
   for (int i=0; i<state_size; i++) {
     assert(target[i] == expected[i]);
@@ -173,7 +217,7 @@ void test_rotate_b() {
   assert(cube.is_solved());
   
   cube.rotate(B_CC);
-  bool expected[state_size] = {
+  double expected[state_size] = {
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -199,7 +243,7 @@ void test_rotate_b() {
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
   };
-  bool target[state_size];
+  double target[state_size];
   cube.get_state(target);
   for (int i=0; i<state_size; i++) {
     assert(target[i] == expected[i]);
@@ -214,7 +258,7 @@ void test_rotate_r() {
   assert(cube.is_solved());
   
   cube.rotate(R_CW);
-  bool expected[state_size] = {
+  double expected[state_size] = {
     1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
     0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -240,7 +284,7 @@ void test_rotate_r() {
     0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,
     0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
   };
-  bool target[state_size];
+  double target[state_size];
   cube.get_state(target);
   for (int i=0; i<state_size; i++) {
     assert(target[i] == expected[i]);
@@ -255,7 +299,7 @@ void test_rotate_l() {
   assert(cube.is_solved());
   
   cube.rotate(L_CC);
-  bool expected[state_size] = {
+  double expected[state_size] = {
     0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,
     0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,
@@ -282,7 +326,7 @@ void test_rotate_l() {
     0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
   };
 
-  bool target[state_size];
+  double target[state_size];
   cube.get_state(target);
   for (int i=0; i<state_size; i++) {
     assert(target[i] == expected[i]);
@@ -292,7 +336,9 @@ void test_rotate_l() {
 int main() {
   std::cout << "Start tests" << std::endl;
   test_is_solved();
+  test_is_solved_hypo();
   test_get_state();
+  test_get_state_hypo();
   test_rotate_u();
   test_rotate_d();
   test_rotate_f();

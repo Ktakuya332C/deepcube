@@ -1,6 +1,7 @@
 #include "nn_cost.h"
 #include <cmath>
 #include <cfloat>
+#include <algorithm>
 
 double squared_error_grad(
     double const *const input, double target, double *const feedbacks) {
@@ -10,10 +11,7 @@ double squared_error_grad(
 
 double cross_entropy_loss_grad(double const *const input,
     int target_idx, int n_class, double *const feedbacks) {
-  double max_input = -DBL_MAX;
-  for (int i=0; i<n_class; i++) {
-    if (max_input < input[i]) max_input = input[i];
-  }
+  double max_input = *std::max_element(input, input+n_class);
   double sum_exp = 0.0;
   for (int i=0; i<n_class; i++) {
     sum_exp += exp(input[i] - max_input);

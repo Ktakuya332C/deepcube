@@ -89,7 +89,7 @@ DenseLayer::~DenseLayer() {
 
 void DenseLayer::forward() {
   prev_layer_->forward();
-  naive_mv(weights_, prev_layer_->activations,
+  cblas_mv(weights_, prev_layer_->activations,
       n_neurons, prev_layer_->n_neurons, activations);
   for (int i=0; i<n_neurons; i++) {
     activations[i] += bias_[i];
@@ -98,13 +98,13 @@ void DenseLayer::forward() {
 
 void DenseLayer::backward(double alpha) {
   // Calculate gradients of this layer
-  naive_mm(feedbacks, prev_layer_->activations,
+  cblas_mm(feedbacks, prev_layer_->activations,
       n_neurons, 1, prev_layer_->n_neurons, alpha, weight_grads_);
   for (int i=0; i<n_neurons; i++) {
     bias_grads_[i] += alpha * feedbacks[i];
   }
   // Calculate gradients of previous layer
-  naive_vm(weights_, feedbacks,
+  cblas_vm(weights_, feedbacks,
       n_neurons, prev_layer_->n_neurons, prev_layer_->feedbacks);
   prev_layer_->backward(alpha);
 }
@@ -132,11 +132,12 @@ void DenseLayer::init_params(
 }
 
 void DenseLayer::apply_grad(double lr) {
+  // Implements Rprop
   for (int i=0; i<n_neurons*prev_layer_->n_neurons; i++) {
-    weights_[i] -= lr * weight_grads_[i];
+    weights_[i] -= lr * sign(weight_grads_[i]);
   }
   for (int i=0; i<n_neurons; i++) {
-    bias_[i] -= lr * bias_grads_[i];
+    bias_[i] -= lr * sign(bias_grads_[i]);
   }
   prev_layer_->apply_grad(lr);
 }

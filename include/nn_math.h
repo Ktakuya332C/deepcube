@@ -3,16 +3,20 @@
 
 double relu(double x);
 double step(double x);
+double sign(double x);
 double uniform(double lower, double upper);
 
 // y += Ax, A \in M(n, m), row major
 void naive_mv(const double* A, const double* x, int n, int m, double* y);
 
+// y += Ax, A \in M(n, m), row major
+void cblas_mv(const double* A, const double* x, int n, int m, double* y);
+
 // y += A^T x, A \in M(n, m), row major
 void naive_vm(const double* A, const double* x, int n, int m, double* y);
 
-// y += Ax, A \in M(n, m), row major
-void cblas_mv(const double* A, const double* x, int n, int m, double* y);
+// y += A^T x, A \in M(n, m), row major
+void cblas_vm(const double* A, const double* x, int n, int m, double* y);
 
 // C += alpha * AB, A \in M(n, l), B \in M(l, m), row major
 void naive_mm(const double* A, const double* B,

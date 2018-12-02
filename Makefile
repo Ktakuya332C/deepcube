@@ -1,30 +1,37 @@
 CXX = g++
-INC = -I include
-FLG = -Wall -std=c++11
+INC = -I include -I /usr/local/opt/openblas/include
+FLG = -Wall -std=c++11 -O2
+LIB = -lopenblas -L /usr/local/opt/openblas/lib
 
-main: bin/trainer_sample_logloss bin/trainer_sample_squared
+main: bin/trainer_sample_logloss bin/trainer_sample_squared bin/trainer_cube
 
 test: bin/test_cube bin/test_nn_math bin/test_nn_layer bin/test_nn_cost
 
 
+bin/trainer_cube: build/trainer_cube.o build/cube.o build/nn_layer.o build/nn_math.o build/nn_cost.o build/cube.o
+	$(CXX) $(FLG) $(LIB) $^ -o $@
+
 bin/trainer_sample_logloss: build/trainer_sample_logloss.o build/cube.o build/nn_layer.o build/nn_math.o build/nn_cost.o
-	$(CXX) $(FLG) $^ -o $@
+	$(CXX) $(FLG) $(LIB) $^ -o $@
 
 bin/trainer_sample_squared: build/trainer_sample_squared.o build/cube.o build/nn_layer.o build/nn_math.o build/nn_cost.o
-	$(CXX) $(FLG) $^ -o $@
+	$(CXX) $(FLG) $(LIB) $^ -o $@
 
 bin/test_cube: build/test_cube.o build/cube.o
-	$(CXX) $(FLG) $^ -o $@
+	$(CXX) $(FLG) $(LIB) $^ -o $@
 
 bin/test_nn_math: build/test_nn_math.o build/nn_math.o
-	$(CXX) $(FLG) $^ -o $@
+	$(CXX) $(FLG) $(LIB) $^ -o $@
 
 bin/test_nn_layer: build/test_nn_layer.o build/nn_layer.o build/nn_math.o
-	$(CXX) $(FLG) $^ -o $@
+	$(CXX) $(FLG) $(LIB) $^ -o $@
 
 bin/test_nn_cost: build/test_nn_cost.o build/nn_cost.o
-	$(CXX) $(FLG)  $^ -o $@
+	$(CXX) $(FLG) $(LIB) $^ -o $@
 
+
+build/trainer_cube.o: src/trainer_cube.cc
+	$(CXX) $(FLG) $(INC) -c $^ -o $@
 
 build/trainer_sample_logloss.o: src/trainer_sample_logloss.cc
 	$(CXX) $(FLG) $(INC) -c $^ -o $@

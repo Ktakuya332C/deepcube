@@ -1,7 +1,13 @@
 #include "cube.h"
+#include <map>
+#include <random>
 #include <iostream>
 
 namespace {
+
+std::random_device rd;
+std::mt19937 gen(rd());
+std::uniform_int_distribution<> dis(0, 12);
 
 const int u_cycles[5][4] = {
   { 0,  1,  3,  2},
@@ -51,6 +57,21 @@ const int l_cycles[5][4] = {
   {16,  6, 22,  2},
 };
 
+const std::map<Move, Move> counter_move = {
+  {U_CC, U_CW},
+  {U_CW, U_CC},
+  {D_CC, D_CW},
+  {D_CW, D_CC},
+  {F_CC, F_CW},
+  {F_CW, F_CC},
+  {B_CC, B_CW},
+  {B_CW, B_CC},
+  {R_CC, R_CW},
+  {R_CW, R_CC},
+  {L_CC, L_CW},
+  {L_CW, L_CC},
+};
+
 void rotate_forward(int* labels, const int cycles[5][4]) {
   for (int i=0; i<5; i++) {
     int tmp = labels[cycles[i][3]];
@@ -97,16 +118,29 @@ bool Cube::is_solved() {
   return true;
 }
 
-void Cube::get_state(bool* cur_state) {
+bool Cube::is_solved_hypo(Move move) {
+  rotate(move);
+  bool flag = is_solved();
+  rotate(counter_move.at(move));
+  return flag;
+}
+
+void Cube::get_state(double* cur_state) {
   for (int i=0; i<20*24; i++) {
-    cur_state[i] = false;
+    cur_state[i] = 0;
   }
   for (int i=0; i<8; i++) {
-    cur_state[i*24 + labels[i]] = true;
+    cur_state[i*24 + labels[i]] = 1;
   }
   for (int i=8; i<20; i++) {
-    cur_state[i*24 + labels[i+16] - 24] = true;
+    cur_state[i*24 + labels[i+16] - 24] = 1;
   }
+}
+
+void Cube::get_state_hypo(Move move, double* next_state) {
+  rotate(move);
+  get_state(next_state);
+  rotate(counter_move.at(move));
 }
 
 void Cube::print_raw_state() {
@@ -131,4 +165,8 @@ void Cube::rotate(Move move) {
     case L_CW: rotate_forward(labels, l_cycles); break;
     case L_CC: rotate_backward(labels, l_cycles); break;
   }
+}
+
+void Cube::rotate_random() {
+  rotate(static_cast<Move>(dis(gen)));
 }

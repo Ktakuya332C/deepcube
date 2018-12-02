@@ -1,6 +1,7 @@
 #ifndef CUBE_H_
 #define CUBE_H_
 
+const int n_move = 12;
 const int state_size = 20 * 24;
 
 enum Move {
@@ -15,8 +16,11 @@ public:
   ~Cube();
   void init();
   bool is_solved();
+  bool is_solved_hypo(Move move);
   void rotate(Move move);
-  void get_state(bool* cur_state);
+  void rotate_random();
+  void get_state(double* cur_state);
+  void get_state_hypo(Move move, double* next_state);
   void print_raw_state();
 private:
   int* labels;
