@@ -1,6 +1,8 @@
 #ifndef NN_LAYER_H_
 #define NN_LAYER_H_
 
+#include <string>
+
 class AbstractLayer {
   
 public:
@@ -62,6 +64,10 @@ public:
   
   void apply_grad(double lr) override;
   void zero_grad() override;
+  
+  // dir_path must end with a slash (/)
+  bool save(std::string dir_path, std::string base_name);
+  bool load(std::string dir_path, std::string base_name);
   
 private:
   double *weights_;

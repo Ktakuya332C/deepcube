@@ -5,9 +5,9 @@
 #include "nn_layer.h"
 
 const int n_epoch = 1000;
-const int n_cube = 800;
-const int n_scramble = 5;
-const double lr = 0.1;
+const int n_cube = 160;
+const int n_scramble = 25;
+const double lr = 1.0 / (n_cube * n_scramble);
 
 void calc_max(double const *const array, int size, double *max_value, int *max_idx) {
   *max_value = -DBL_MAX;
@@ -65,8 +65,11 @@ int main() {
           Move cur_hypo_move = static_cast<Move>(k);
           cube.get_state_hypo(cur_hypo_move, input_layer.activations);
           dense_layer_v2.forward();
-          values[k] = cube.is_solved_hypo(cur_hypo_move) ? 1.0 : -1.0;
-          values[k] += dense_layer_v2.activations[0];
+          if (cube.is_solved_hypo(cur_hypo_move)) {
+            values[k] = 1.0;
+          } else {
+            values[k] = dense_layer_v2.activations[0] - 1.0;
+          }
           dense_layer_v2.zero_states();
         }
         calc_max(values, n_move, &target_value, &target_idx);
@@ -93,7 +96,7 @@ int main() {
     }
     
     // Apply gradients
-    dense_layer2.apply_grad(lr / (n_cube * n_scramble));
+    dense_layer2.apply_grad(lr);
     dense_layer2.zero_grad();
     
     cost_target /= n_cube;

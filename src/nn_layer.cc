@@ -1,7 +1,8 @@
 #include "nn_layer.h"
 #include "nn_math.h"
-#include <algorithm>
 #include <cmath>
+#include <fstream>
+#include <algorithm>
 
 /**
 * AbstractLayer
@@ -150,4 +151,40 @@ void DenseLayer::zero_grad() {
     bias_grads_[i] = 0.0;
   }
   prev_layer_->zero_grad();
+}
+
+bool DenseLayer::save(std::string dir_path, std::string base_name) {
+  const std::string path_w = dir_path + base_name + "_weight";
+  const std::string path_b = dir_path + base_name + "_bias";
+  std::ofstream out_w(path_w, std::ios::out | std::ios::binary);
+  std::ofstream out_b(path_b, std::ios::out | std::ios::binary);
+  if (out_w.is_open() && out_b.is_open()) {
+    out_w.write((char*)weights_,
+        sizeof(double)*n_neurons*prev_layer_->n_neurons);
+    out_b.write((char*)bias_,
+        sizeof(double)*n_neurons);
+    out_w.close();
+    out_b.close();
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool DenseLayer::load(std::string dir_path, std::string base_name) {
+  const std::string path_w = dir_path + base_name + "_weight";
+  const std::string path_b = dir_path + base_name + "_bias";
+  std::ifstream in_w(path_w, std::ios::in | std::ios::binary);
+  std::ifstream in_b(path_b, std::ios::in | std::ios::binary);
+  if (in_w.is_open() && in_b.is_open()) {
+    in_w.read((char*)weights_,
+        sizeof(double)*n_neurons*prev_layer_->n_neurons);
+    in_b.read((char*)bias_,
+        sizeof(double)*n_neurons);
+    in_w.close();
+    in_b.close();
+    return true;
+  } else {
+    return false;
+  }
 }

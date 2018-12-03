@@ -1,4 +1,5 @@
 #include "nn_layer.h"
+#include <cmath>
 #include <cassert>
 #include <iostream>
 
@@ -66,6 +67,37 @@ void test_dense_layer_backward() {
   }
 }
 
+void test_dense_layer_save_load() {
+  InputLayer input_layer(5);
+  double in_activations[5] = {1, -1, 1, -1, 1};
+  for (int i=0; i<5; i++) {
+    input_layer.activations[i] = in_activations[i];
+  }
+  
+  DenseLayer dense_layer(4, &input_layer);
+  dense_layer.init_params();
+  dense_layer.forward();
+  
+  double activations[4];
+  for (int i=0; i<4; i++) {
+    activations[i] = dense_layer.activations[i];
+  }
+  
+  assert(dense_layer.save("/tmp/", "test_dense_layer_save_load"));
+  dense_layer.init_params();
+  assert(dense_layer.load("/tmp/", "test_dense_layer_save_load"));
+  
+  dense_layer.zero_states();
+  for (int i=0; i<5; i++) {
+    input_layer.activations[i] = in_activations[i];
+  }
+  dense_layer.forward();
+  
+  for (int i=0; i<4; i++) {
+    assert(std::fabs(activations[i] -  dense_layer.activations[i]) < 1e-3);
+  }
+}
+
 void test_relu_layer_forward() {
   InputLayer input_layer(5);
   double in_activations[5] = {-1, 2, -1, 1, -4};
@@ -110,6 +142,7 @@ int main() {
   test_input_layer_forward();
   test_dense_layer_forward();
   test_dense_layer_backward();
+  test_dense_layer_save_load();
   test_relu_layer_forward();
   test_relu_layer_backward();
   std::cout << "Succeed all tests" << std::endl;
