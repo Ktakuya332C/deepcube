@@ -1,13 +1,15 @@
 #include <iostream>
 #include <cfloat>
+#include <string>
 #include "cube.h"
 #include "nn_cost.h"
 #include "nn_layer.h"
 
 const int n_epoch = 1000;
-const int n_cube = 160;
+const int n_cube = 100;
 const int n_scramble = 25;
 const double lr = 1.0 / (n_cube * n_scramble);
+const std::string save_dir = "/tmp/";
 
 void calc_max(double const *const array, int size, double *max_value, int *max_idx) {
   *max_value = -DBL_MAX;
@@ -106,6 +108,15 @@ int main() {
     std::cout << "-- Target cost  " << cost_target << std::endl;
     std::cout << "-- Squared loss " << cost_v << std::endl;
     std::cout << "-- Cross entropy loss " << cost_p << std::endl;
+    
+    if ( epoch == 0 || (epoch+1) % 100 == 0 ) {
+      dense_layer1.save(save_dir, "dense_layer1");
+      dense_layer2.save(save_dir, "dense_layer2");
+      dense_layer_p1.save(save_dir, "dense_layer_p1");
+      dense_layer_p2.save(save_dir, "dense_layer_p2");
+      dense_layer_v1.save(save_dir, "dense_layer_v1");
+      dense_layer_v2.save(save_dir, "dense_layer_v2");
+    }
   }
   delete[] values;
   
