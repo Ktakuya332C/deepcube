@@ -109,6 +109,12 @@ void Cube::init() {
   }
 }
 
+void Cube::restore(Cube const &other) {
+  for (int i=0; i<48; i++) {
+    labels[i] = other.labels[i];
+  }
+}
+
 bool Cube::is_solved() {
   for (int i=0; i<48; i++) {
     if (labels[i] != i) {

@@ -15,6 +15,7 @@ public:
   Cube();
   ~Cube();
   void init();
+  void restore(Cube const &other);
   bool is_solved();
   bool is_solved_hypo(Move move);
   void rotate(Move move);

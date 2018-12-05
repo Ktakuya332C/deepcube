@@ -2,6 +2,19 @@
 #include <cassert>
 #include <iostream>
 
+void test_restore() {
+  Cube cube1, cube2;
+  cube1.rotate_random();
+  cube2.restore(cube1);
+  double state1[state_size];
+  double state2[state_size];
+  cube1.get_state(state1);
+  cube2.get_state(state2);
+  for (int i=0; i<state_size; i++) {
+    assert(state1[i] == state2[i]);
+  }
+}
+
 void test_is_solved() {
   Cube cube;
   assert(cube.is_solved());
@@ -335,6 +348,7 @@ void test_rotate_l() {
 
 int main() {
   std::cout << "Start tests" << std::endl;
+  test_restore();
   test_is_solved();
   test_is_solved_hypo();
   test_get_state();

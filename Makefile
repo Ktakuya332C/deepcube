@@ -3,12 +3,15 @@ INC = -I include -I /usr/local/opt/openblas/include
 FLG = -Wall -std=c++11 -O2
 LIB = -lopenblas -L /usr/local/opt/openblas/lib
 
-main: bin/trainer_sample_logloss bin/trainer_sample_squared bin/trainer_cube
+main: bin/trainer_sample_logloss bin/trainer_sample_squared bin/trainer_cube bin/search_cube
 
 test: bin/test_cube bin/test_nn_math bin/test_nn_layer bin/test_nn_cost
 
 
-bin/trainer_cube: build/trainer_cube.o build/cube.o build/nn_layer.o build/nn_math.o build/nn_cost.o build/cube.o
+bin/trainer_cube: build/trainer_cube.o build/cube.o build/nn_layer.o build/nn_math.o build/nn_cost.o
+	$(CXX) $(FLG) $(LIB) $^ -o $@
+
+bin/search_cube: build/search_cube.o build/cube.o build/nn_layer.o build/nn_math.o
 	$(CXX) $(FLG) $(LIB) $^ -o $@
 
 bin/trainer_sample_logloss: build/trainer_sample_logloss.o build/cube.o build/nn_layer.o build/nn_math.o build/nn_cost.o
@@ -31,6 +34,9 @@ bin/test_nn_cost: build/test_nn_cost.o build/nn_cost.o
 
 
 build/trainer_cube.o: src/trainer_cube.cc
+	$(CXX) $(FLG) $(INC) -c $^ -o $@
+
+build/search_cube.o: src/search_cube.cc
 	$(CXX) $(FLG) $(INC) -c $^ -o $@
 
 build/trainer_sample_logloss.o: src/trainer_sample_logloss.cc
