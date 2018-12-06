@@ -34,6 +34,20 @@ double uniform(double lower, double upper) {
   return dis(gen);
 }
 
+void softmax(const double* in_values, double* out_values, int length) {
+  double max_val = in_values[0];
+  for (int i=1; i<length; i++) {
+    if (in_values[i] > max_val) max_val = in_values[i];
+  }
+  double denominator = 0.0;
+  for (int i=0; i<length; i++) {
+    denominator += exp(in_values[i] - max_val);
+  }
+  for (int i=0; i<length; i++) {
+    out_values[i] = exp(in_values[i] - max_val) / denominator;
+  }
+}
+
 void naive_mv(const double* A, const double* x, int n, int m, double* y) {
   for (int i=0; i<n; i++) {
     for (int j=0; j<m; j++) {

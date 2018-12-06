@@ -1,6 +1,19 @@
 #include "nn_math.h"
 #include <cassert>
+#include <cmath>
 #include <iostream>
+
+void test_softmax() {
+  double in_values[5] = {1, 2, -1, 3, 5};
+  double out_values[5];
+  softmax(in_values, out_values, 5);
+  
+  double expected[5] = {
+      0.01518815, 0.04128566, 0.00205549, 0.11222606, 0.82924464};
+  for (int i=0; i<5; i++) {
+    assert(std::fabs(out_values[i] - expected[i]) < 1e-4);
+  }
+}
 
 void test_naive_mv() {
   double A[15] = {
@@ -130,6 +143,7 @@ void test_cblas_mm() {
 
 int main() {
   std::cout << "Start tests" << std::endl;
+  test_softmax();
   test_naive_mv();
   test_cblas_mv();
   test_naive_vm();

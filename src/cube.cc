@@ -7,7 +7,7 @@ namespace {
 
 std::random_device rd;
 std::mt19937 gen(rd());
-std::uniform_int_distribution<> dis(0, 12);
+std::uniform_int_distribution<> dis(0, n_move-1);
 
 const int u_cycles[5][4] = {
   { 0,  1,  3,  2},
@@ -151,9 +151,11 @@ void Cube::get_state_hypo(Move move, double* next_state) {
 
 void Cube::print_raw_state() {
   for (int i=0; i<48; i++) {
-    std::cout << "Position: " << i;
-    std::cout << " Value: " << labels[i] << std::endl;
+    /* std::cout << "Position: " << i;
+    std::cout << " Value: " << labels[i] << std::endl; */
+    std::cout << labels[i] << " ";
   }
+  std::cout << std::endl;
 }
 
 void Cube::rotate(Move move) {
@@ -173,6 +175,8 @@ void Cube::rotate(Move move) {
   }
 }
 
-void Cube::rotate_random() {
-  rotate(static_cast<Move>(dis(gen)));
+Move Cube::rotate_random() {
+  Move move = static_cast<Move>(dis(gen));
+  rotate(move);
+  return move;
 }

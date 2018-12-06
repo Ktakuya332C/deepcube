@@ -19,7 +19,7 @@ public:
   bool is_solved();
   bool is_solved_hypo(Move move);
   void rotate(Move move);
-  void rotate_random();
+  Move rotate_random();
   void get_state(double* cur_state);
   void get_state_hypo(Move move, double* next_state);
   void print_raw_state();

@@ -5,6 +5,7 @@ double relu(double x);
 double step(double x);
 double sign(double x);
 double uniform(double lower, double upper);
+void softmax(const double* in_values, double* out_values, int length);
 
 // y += Ax, A \in M(n, m), row major
 void naive_mv(const double* A, const double* x, int n, int m, double* y);
