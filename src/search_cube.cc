@@ -9,8 +9,8 @@
 #include "nn_layer.h"
 
 const std::string save_dir = "data/";
-const int n_scramble = 5;
-const int max_try = 100;
+const int n_scramble = 10;
+const int max_try = 1000;
 const double c = 5.0;
 
 std::map<Move, std::string> move_str {
@@ -121,6 +121,7 @@ int main() {
   dense_layer_v2.load(save_dir, "dense_layer_v2");
   
   // Scramble the cube
+  std::cout << "Scramble the cube. The order of moves is" << std::endl;
   Cube original;
   for (int i=0; i<n_scramble; i++) {
     Move move = original.rotate_random();
@@ -141,7 +142,7 @@ int main() {
         input_layer, dense_layer_v2, dense_layer_p2);
     
     if (cube.is_solved()) {
-      std::cout << "Solved the cube. Order of moves are" << std::endl;
+      std::cout << "Solved the cube. The order of moves is" << std::endl;
       for (int i=0; i<depth; i++) {
         std::cout << move_str[history[i]] << " ";
       }
