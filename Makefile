@@ -27,11 +27,11 @@ clean:
 
 bin/exec/%: build/exec/%.o $(OBJS)
 	@mkdir -p bin/exec;
-	$(CXX) $(FLG) $(LIB) $^ -o $@
+	$(CXX) $(FLG) $^ -o $@ $(LIB)
 
 bin/test/%: build/test/%.o $(OBJS)
 	@mkdir -p bin/test;
-	$(CXX) $(FLG) $(LIB) $^ -o $@
+	$(CXX) $(FLG) $^ -o $@ $(LIB)
 
 build/exec/%.o: exec/%.cc
 	@mkdir -p build/exec;
