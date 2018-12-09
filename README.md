@@ -53,5 +53,6 @@ will use the trained parameters.
 * The interpretation of the Rubik's Cube as a Markov decision process is different from the original paper. The original paper describes it as a continuing task without an end state, meaning the task continues even if the Rubik's Cube is solved. This leads to the training algorithm described in Algorithm 1 of the original paper, which does not separate the solved state as a special case.
 However, this implementation separates the solved state as a special case because we interpret the solved state as an end state of the MDP that terminates the task. This leads to an algorithm like [this](https://github.com/Ktakuya332C/deepcube/blob/master/exec/trainer_cube.cc#L60-L64).
 
-
+## ToDo
+* Refactoring ...
 
