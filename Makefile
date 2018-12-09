@@ -19,6 +19,7 @@ main: $(MAINTGTS)
 
 .PHONY: test
 test: $(TESTTGTS)
+	$(foreach prog, $(TESTTGTS), $(prog) &&) true
 
 .PHONY: clean
 clean:
