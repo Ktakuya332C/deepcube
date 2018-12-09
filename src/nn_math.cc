@@ -1,5 +1,6 @@
 #include "nn_math.h"
 #include <cblas.h>
+#include <cfloat>
 #include <random>
 
 std::random_device rd;
@@ -32,6 +33,16 @@ double sign(double x) {
 double uniform(double lower, double upper) {
   std::uniform_real_distribution<> dis(lower, upper);
   return dis(gen);
+}
+
+void calc_max(const double *array, int size, double *max_value, int *max_idx) {
+  *max_value = -DBL_MAX;
+  for (int i=0; i<size; i++) {
+    if (array[i] > *max_value) {
+      *max_value = array[i];
+      *max_idx = i;
+    }
+  }
 }
 
 void softmax(const double* in_values, double* out_values, int length) {

@@ -1,76 +1,46 @@
 CXX = g++
 INC = -I include -I /usr/local/opt/openblas/include
-FLG = -Wall -std=c++11 -O2
+FLG = -Wall -O2 -std=c++11
 LIB = -lopenblas -L /usr/local/opt/openblas/lib
 
-main: bin/trainer_sample_logloss bin/trainer_sample_squared bin/trainer_cube bin/search_cube
+SRCS = $(shell find src -type f -name *.cc)
+OBJS = $(patsubst src/%.cc, build/src/%.o, $(SRCS))
 
-test: bin/test_cube bin/test_nn_math bin/test_nn_layer bin/test_nn_cost
+MAINSRCS = $(shell find exec -type f -name *.cc)
+MAINOBJS = $(patsubst exec/%.cc, build/exec/%.o, $(MAINSRCS))
+MAINTGTS = $(patsubst exec/%.cc, bin/exec/%, $(MAINSRCS))
 
+TESTSRCS = $(shell find test -type f -name *.cc)
+TESTOBJS = $(patsubst test/%.cc, build/test/%.o, $(TESTSRCS))
+TESTTGTS = $(patsubst test/%.cc, bin/test/%, $(TESTSRCS))
 
-bin/trainer_cube: build/trainer_cube.o build/cube.o build/nn_layer.o build/nn_math.o build/nn_cost.o
-	$(CXX) $(FLG) $(LIB) $^ -o $@
+.PHONY: main
+main: $(MAINTGTS)
 
-bin/search_cube: build/search_cube.o build/cube.o build/nn_layer.o build/nn_math.o
-	$(CXX) $(FLG) $(LIB) $^ -o $@
-
-bin/trainer_sample_logloss: build/trainer_sample_logloss.o build/cube.o build/nn_layer.o build/nn_math.o build/nn_cost.o
-	$(CXX) $(FLG) $(LIB) $^ -o $@
-
-bin/trainer_sample_squared: build/trainer_sample_squared.o build/cube.o build/nn_layer.o build/nn_math.o build/nn_cost.o
-	$(CXX) $(FLG) $(LIB) $^ -o $@
-
-bin/test_cube: build/test_cube.o build/cube.o
-	$(CXX) $(FLG) $(LIB) $^ -o $@
-
-bin/test_nn_math: build/test_nn_math.o build/nn_math.o
-	$(CXX) $(FLG) $(LIB) $^ -o $@
-
-bin/test_nn_layer: build/test_nn_layer.o build/nn_layer.o build/nn_math.o
-	$(CXX) $(FLG) $(LIB) $^ -o $@
-
-bin/test_nn_cost: build/test_nn_cost.o build/nn_cost.o
-	$(CXX) $(FLG) $(LIB) $^ -o $@
-
-
-build/trainer_cube.o: src/trainer_cube.cc
-	$(CXX) $(FLG) $(INC) -c $^ -o $@
-
-build/search_cube.o: src/search_cube.cc
-	$(CXX) $(FLG) $(INC) -c $^ -o $@
-
-build/trainer_sample_logloss.o: src/trainer_sample_logloss.cc
-	$(CXX) $(FLG) $(INC) -c $^ -o $@
-
-build/trainer_sample_squared.o: src/trainer_sample_squared.cc
-	$(CXX) $(FLG) $(INC) -c $^ -o $@
-
-build/cube.o: src/cube.cc
-	$(CXX) $(FLG) $(INC) -c $^ -o $@
-
-build/nn_math.o: src/nn_math.cc
-	$(CXX) $(FLG) $(INC) -c $^ -o $@
-
-build/nn_layer.o: src/nn_layer.cc
-	$(CXX) $(FLG) $(INC) -c $^ -o $@
-
-build/nn_cost.o: src/nn_cost.cc
-	$(CXX) $(FLG) $(INC) -c $^ -o $@
-
-build/test_cube.o: test/test_cube.cc
-	$(CXX) $(FLG) $(INC) -c $^ -o $@
-
-build/test_nn_math.o: test/test_nn_math.cc
-	$(CXX) $(FLG) $(INC) -c $^ -o $@
-
-build/test_nn_layer.o: test/test_nn_layer.cc
-	$(CXX) $(FLG) $(INC) -c $^ -o $@
-
-build/test_nn_cost.o: test/test_nn_cost.cc
-	$(CXX) $(FLG) $(INC) -c $^ -o $@
-
+.PHONY: test
+test: $(TESTTGTS)
 
 .PHONY: clean
 clean:
-	rm build/* bin/*
+	rm -rf build/* bin/*
+
+bin/exec/%: build/exec/%.o $(OBJS)
+	@mkdir -p bin/exec;
+	$(CXX) $(FLG) $(LIB) $^ -o $@
+
+bin/test/%: build/test/%.o $(OBJS)
+	@mkdir -p bin/test;
+	$(CXX) $(FLG) $(LIB) $^ -o $@
+
+build/exec/%.o: exec/%.cc
+	@mkdir -p build/exec;
+	$(CXX) $(FLG) $(INC) -c $^ -o $@
+
+build/test/%.o: test/%.cc
+	@mkdir -p build/test;
+	$(CXX) $(FLG) $(INC) -c $^ -o $@
+
+build/src/%.o: src/%.cc
+	@mkdir -p build/src;
+	$(CXX) $(FLG) $(INC) -c $^ -o $@
 

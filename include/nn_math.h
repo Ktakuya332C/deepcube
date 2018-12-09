@@ -6,6 +6,7 @@ double step(double x);
 double sign(double x);
 double uniform(double lower, double upper);
 void softmax(const double* in_values, double* out_values, int length);
+void calc_max(const double*array, int size, double *max_value, int *max_idx);
 
 // y += Ax, A \in M(n, m), row major
 void naive_mv(const double* A, const double* x, int n, int m, double* y);

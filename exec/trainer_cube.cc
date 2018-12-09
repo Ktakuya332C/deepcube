@@ -1,7 +1,7 @@
 #include <iostream>
-#include <cfloat>
 #include <string>
 #include "cube.h"
+#include "nn_math.h"
 #include "nn_cost.h"
 #include "nn_layer.h"
 
@@ -10,16 +10,6 @@ const int n_cube = 100;
 const int n_scramble = 25;
 const double lr = 1.0 / (n_cube * n_scramble);
 const std::string save_dir = "/tmp/";
-
-void calc_max(double const *const array, int size, double *max_value, int *max_idx) {
-  *max_value = -DBL_MAX;
-  for (int i=0; i<size; i++) {
-    if (array[i] > *max_value) {
-      *max_value = array[i];
-      *max_idx = i;
-    }
-  }
-}
 
 int main() {
   Cube cube;
