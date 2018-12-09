@@ -9,7 +9,7 @@
 #include "nn_layer.h"
 
 const std::string save_dir = "data/";
-const int n_scramble = 10;
+const int n_scramble = 6;
 const int max_try = 1000;
 const double c = 5.0;
 
