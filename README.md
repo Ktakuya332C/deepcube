@@ -14,10 +14,12 @@ First, install [OpenBLAS](https://www.openblas.net/)
 ```
 MacOS
 $ brew install openblas
+Ubuntu
+$ sudo apt-get install libopenblas-dev
 ```
 Then, get this repository and make
 ```
-$ git clone 
+$ git clone https://github.com/Ktakuya332C/deepcube
 $ cd deepcube
 $ make
 ```
